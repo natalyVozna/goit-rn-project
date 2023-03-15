@@ -19,7 +19,7 @@ export const AvatarBox = () => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.btn}
-        onPress={console.log("press")}
+        // onPress={console.log("press")}
       >
         <Text style={styles.btnText}>+</Text>
       </TouchableOpacity>
@@ -30,9 +30,7 @@ export const AvatarBox = () => {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    // left: `${Dimensions.get("window").width - 60 / 2}`,
     top: -60,
-    // transform: "translateX('-50%')",
   },
   cover: {
     width: 120,

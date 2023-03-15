@@ -4,7 +4,6 @@ import {
   View,
   Text,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -13,6 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 import { AvatarBox } from "../components/AvatarBox";
+import { TextInputCustom } from "../components/TextInputCustom";
 
 const initialState = {
   nickname: "",
@@ -30,7 +30,6 @@ export const RegistrationScreen = () => {
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get("window").width - 16 * 2;
-      console.log("width", width);
       setDimensions(width);
     };
     const subscription = Dimensions.addEventListener("change", onChange);
@@ -39,7 +38,6 @@ export const RegistrationScreen = () => {
   }, []);
 
   const keyboardHide = (eventType) => {
-    console.log("keyboardH", eventType);
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
@@ -55,45 +53,38 @@ export const RegistrationScreen = () => {
           style={styles.image}
         >
           <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            behavior={Platform.OS == "ios" ? "padding" : ""}
           >
             <View style={styles.form}>
               <AvatarBox />
               <View style={{ ...styles.content, width: dimensions }}>
                 <Text style={styles.title}>Регистрация</Text>
-                <TextInput
-                  style={styles.input}
+                <TextInputCustom
                   placeholder="Логин"
-                  placeholderTextColor={"#BDBDBD"}
-                  value={state.nickname}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  onChangeText={(value) =>
+                  handleChangeText={(value) =>
                     setState((prevState) => ({ ...prevState, nickname: value }))
                   }
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Адрес электронной почты"
-                  placeholderTextColor={"#BDBDBD"}
-                  value={state.email}
+                  value={state.nickname}
                   onFocus={() => setIsShowKeyboard(true)}
-                  onChangeText={(value) =>
+                />
+                <TextInputCustom
+                  placeholder="Адрес электронной почты"
+                  handleChangeText={(value) =>
                     setState((prevState) => ({ ...prevState, email: value }))
                   }
+                  value={state.email}
+                  keyboardType="email-address"
+                  onFocus={() => setIsShowKeyboard(true)}
                 />
-                <TextInput
-                  style={{
-                    ...styles.input,
-                    marginBottom: isShowKeyboard ? 32 : 43,
-                  }}
+                <TextInputCustom
+                  customStyle={{ marginBottom: isShowKeyboard ? 32 : 43 }}
                   placeholder="Пароль"
-                  placeholderTextColor={"#BDBDBD"}
+                  handleChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
                   value={state.password}
                   secureTextEntry={true}
                   onFocus={() => setIsShowKeyboard(true)}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, password: value }))
-                  }
                 />
 
                 {!isShowKeyboard && (

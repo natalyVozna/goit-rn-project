@@ -4,7 +4,6 @@ import {
   View,
   Text,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -12,15 +11,16 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
-import { AvatarBox } from "../components/AvatarBox";
-import { TextInputCustom } from "../components/TextInputCustom";
+import { AvatarBox } from "../../components/AvatarBox";
+import { TextInputCustom } from "../../components/TextInputCustom";
 
 const initialState = {
+  nickname: "",
   email: "",
   password: "",
 };
 
-export const LoginScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimensions] = useState(
@@ -37,7 +37,7 @@ export const LoginScreen = () => {
     return () => subscription?.remove();
   }, []);
 
-  const keyboardHide = () => {
+  const keyboardHide = (eventType) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
@@ -47,10 +47,9 @@ export const LoginScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      {/* <View style={styles.container} onLayout={onLayoutRootView}> */}
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/img/photo-bg.jpg")}
+          source={require("../../assets/img/photo-bg.jpg")}
           style={styles.image}
         >
           <KeyboardAvoidingView
@@ -59,8 +58,15 @@ export const LoginScreen = () => {
             <View style={styles.form}>
               <AvatarBox />
               <View style={{ ...styles.content, width: dimensions }}>
-                <Text style={styles.title}>Войти</Text>
-
+                <Text style={styles.title}>Регистрация</Text>
+                <TextInputCustom
+                  placeholder="Логин"
+                  handleChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, nickname: value }))
+                  }
+                  value={state.nickname}
+                  onFocus={() => setIsShowKeyboard(true)}
+                />
                 <TextInputCustom
                   placeholder="Адрес электронной почты"
                   handleChangeText={(value) =>
@@ -71,7 +77,6 @@ export const LoginScreen = () => {
                   onFocus={() => setIsShowKeyboard(true)}
                 />
                 <TextInputCustom
-                  type="password"
                   customStyle={{ marginBottom: isShowKeyboard ? 32 : 43 }}
                   placeholder="Пароль"
                   handleChangeText={(value) =>
@@ -89,11 +94,16 @@ export const LoginScreen = () => {
                       style={styles.btn}
                       onPress={keyboardHide}
                     >
-                      <Text style={styles.btnText}>Войти</Text>
+                      <Text style={styles.btnText}>Зарегистрироваться</Text>
                     </TouchableOpacity>
-                    <Text style={styles.linkAuth}>
-                      Нет аккаунта? Зарегистрироваться
-                    </Text>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => navigation.navigate("Login")}
+                    >
+                      <Text style={styles.linkAuth}>
+                        Уже есть аккаунт? Войти
+                      </Text>
+                    </TouchableOpacity>
                   </>
                 )}
               </View>
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#F6F6F6",
-    // borderColor: "#E8E8E8",
+    borderColor: "#E8E8E8",
     borderWidth: 1,
     borderRadius: 8,
     paddingLeft: 16,

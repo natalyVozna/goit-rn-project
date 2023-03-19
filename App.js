@@ -1,56 +1,62 @@
-import { useState, useCallback } from "react";
-import { StyleSheet, View } from "react-native";
-import { RegistrationScreen } from "./screens/RegistrationScreen";
-
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { LoginScreen } from "./screens/LoginScreen";
+import AppLoading from "expo-app-loading";
 
-// SplashScreen.preventAutoHideAsync();
+import { NavigationContainer } from "@react-navigation/native";
+import { useRoute } from "./router";
 
-const LoadFonts = async () => {
-  await Font.loadAsync({
-    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
-  });
-};
+import { createIconSet } from "@expo/vector-icons";
+export const Icon = createIconSet(glyphMap, "Nucleo", "nucleo.ttf");
+
+import glyphMap from "./assets/icommon/unicodesMap.json";
+
+// const LoadFonts = async () => {
+//   await Font.loadAsync({
+//     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+//     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+//     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+//   });
+// };
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
+  // const routing = useRoute(null);
+  const routing = useRoute({});
 
-  // const [fontsLoaded] = useFonts({
-  //   "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-  //   "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-  //   "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
-  // });
+  const [fontsLoaded] = useFonts({
+    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+    Nucleo: require("./assets/icommon/Nucleo.ttf"),
+  });
 
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      const a = await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
-
-  if (!isReady) {
-    return (
-      <AppLoading
-        startAsync={LoadFonts}
-        onFinish={() => setIsReady(true)}
-        onError={() => {}}
-      />
-    );
+  if (!fontsLoaded) {
+    return null;
   }
 
+  // if (!isReady) {
+  //   return (
+  //     <AppLoading
+  //       startAsync={LoadFonts}
+  //       onFinish={() => setIsReady(true)}
+  //       onError={() => {}}
+  //     />
+  //   );
+  // }
+
   return (
-    <>
-      {/* <RegistrationScreen /> */}
-      <LoginScreen />
-    </>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <NavigationContainer>{routing}</NavigationContainer>
+    </View>
   );
 }

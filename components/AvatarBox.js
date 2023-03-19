@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export const AvatarBox = () => {
   return (
@@ -21,7 +22,7 @@ export const AvatarBox = () => {
         style={styles.btn}
         // onPress={console.log("press")}
       >
-        <Text style={styles.btnText}>+</Text>
+        <Ionicons name="add" size={20} color="#FF6C00" />
       </TouchableOpacity>
     </View>
   );
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderColor: "#FF6C00",
     borderWidth: 1,
+    paddingLeft: 1,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,

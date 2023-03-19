@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   View,
   Text,
   ImageBackground,
+  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -11,21 +12,30 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
-import { AvatarBox } from "../components/AvatarBox";
-import { TextInputCustom } from "../components/TextInputCustom";
+import { AvatarBox } from "../../components/AvatarBox";
+import { TextInputCustom } from "../../components/TextInputCustom";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 
 const initialState = {
-  nickname: "",
   email: "",
   password: "",
 };
 
-export const RegistrationScreen = () => {
+// SplashScreen.preventAutoHideAsync();
+
+export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+
+  // const [fontsLoaded] = useFonts({
+  //   "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+  //   "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+  //   "Roboto-Bold": require("../assets/fonts/Roboto-Bold.ttf"),
+  // });
 
   useEffect(() => {
     const onChange = () => {
@@ -37,7 +47,17 @@ export const RegistrationScreen = () => {
     return () => subscription?.remove();
   }, []);
 
-  const keyboardHide = (eventType) => {
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     const a = await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
+
+  const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
@@ -47,9 +67,10 @@ export const RegistrationScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
+      {/* <View style={styles.container} onLayout={onLayoutRootView}> */}
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/img/photo-bg.jpg")}
+          source={require("../../assets/img/photo-bg.jpg")}
           style={styles.image}
         >
           <KeyboardAvoidingView
@@ -58,15 +79,8 @@ export const RegistrationScreen = () => {
             <View style={styles.form}>
               <AvatarBox />
               <View style={{ ...styles.content, width: dimensions }}>
-                <Text style={styles.title}>Регистрация</Text>
-                <TextInputCustom
-                  placeholder="Логин"
-                  handleChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, nickname: value }))
-                  }
-                  value={state.nickname}
-                  onFocus={() => setIsShowKeyboard(true)}
-                />
+                <Text style={styles.title}>Войти</Text>
+
                 <TextInputCustom
                   placeholder="Адрес электронной почты"
                   handleChangeText={(value) =>
@@ -77,6 +91,7 @@ export const RegistrationScreen = () => {
                   onFocus={() => setIsShowKeyboard(true)}
                 />
                 <TextInputCustom
+                  type="password"
                   customStyle={{ marginBottom: isShowKeyboard ? 32 : 43 }}
                   placeholder="Пароль"
                   handleChangeText={(value) =>
@@ -94,9 +109,16 @@ export const RegistrationScreen = () => {
                       style={styles.btn}
                       onPress={keyboardHide}
                     >
-                      <Text style={styles.btnText}>Зарегистрироваться</Text>
+                      <Text style={styles.btnText}>Войти</Text>
                     </TouchableOpacity>
-                    <Text style={styles.linkAuth}>Уже есть аккаунт? Войти</Text>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => navigation.navigate("Register")}
+                    >
+                      <Text style={styles.linkAuth}>
+                        Нет аккаунта? Зарегистрироваться
+                      </Text>
+                    </TouchableOpacity>
                   </>
                 )}
               </View>
@@ -132,7 +154,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#F6F6F6",
-    borderColor: "#E8E8E8",
+    // borderColor: "#E8E8E8",
     borderWidth: 1,
     borderRadius: 8,
     paddingLeft: 16,

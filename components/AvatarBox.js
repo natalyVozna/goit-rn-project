@@ -1,13 +1,20 @@
 import {
   Dimensions,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 
-export const AvatarBox = () => {
+export const AvatarBox = ({ url }) => {
+  const [color, setColor] = useState("#FF6C00");
+
+  useEffect(() => {
+    if (url) setColor("#E8E8E8");
+  }, [url]);
   return (
     <View
       style={{
@@ -15,14 +22,22 @@ export const AvatarBox = () => {
         left: Dimensions.get("window").width / 2 - 60,
       }}
     >
-      <View style={styles.cover}></View>
+      {url ? (
+        <Image source={url} style={styles.cover} />
+      ) : (
+        <View style={styles.cover}></View>
+      )}
 
       <TouchableOpacity
         activeOpacity={0.8}
-        style={styles.btn}
+        style={{ ...styles.btn, borderColor: color }}
         // onPress={console.log("press")}
       >
-        <Ionicons name="add" size={20} color="#FF6C00" />
+        {url ? (
+          <Ionicons name="md-close-outline" size={20} color="#E8E8E8" />
+        ) : (
+          <Ionicons name="add" size={20} color="#FF6C00" />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -46,7 +61,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     backgroundColor: "#fff",
-    borderColor: "#FF6C00",
+    // borderColor: "#FF6C00",
     borderWidth: 1,
     paddingLeft: 1,
     alignItems: "center",

@@ -43,6 +43,8 @@ export const RegistrationScreen = ({ navigation }) => {
     console.log(state);
 
     setState(initialState);
+
+    navigation.navigate("Home");
   };
 
   return (

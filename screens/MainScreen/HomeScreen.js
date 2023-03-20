@@ -4,6 +4,7 @@ import { Icon } from "../../App";
 import { PostsScreen } from "./PostsScreen";
 import { CreatePostsScreen } from "./CreatePostsScreen";
 import { ProfileScreen } from "./ProfileScreen";
+import { CommentsScreen } from "../CommentsScreen";
 
 const MainTab = createBottomTabNavigator();
 
@@ -25,72 +26,60 @@ export const HomeScreen = ({ navigation }) => {
       screenOptions={{ tabBarShowLabel: false, tabBarStyle: styles.tabBar }}
     >
       <MainTab.Screen
+        name="Posts"
+        component={PostsScreen}
         options={{
           title: "Публикации",
           headerRight: (props) => <LogOutBtn />,
           tabBarItemStyle: { height: 0 },
           headerTitleStyle: styles.titleHeader,
-          tabBarIcon: ({ focused, size, color }) => (
+
+          tabBarIcon: ({ focused, size }) => (
             <View
               style={{
                 ...styles.tabIconContainer,
-                backgroundColor: focused ? "#FF6C00" : "#fff",
               }}
             >
-              <Icon
-                name="icon-grid"
-                size={size}
-                color={focused ? "#fff" : "#212121"}
-              />
+              <Icon name="icon-grid" size={24} color="#212121" />
             </View>
           ),
         }}
-        name="Posts"
-        component={PostsScreen}
       />
       <MainTab.Screen
+        name="Create"
+        component={CreatePostsScreen}
         options={{
           headerTitle: "Создать публикацию",
           tabBarItemStyle: { height: 0 },
           tabBarIcon: ({ focused, size, color }) => (
-            <View
+            <TouchableOpacity
               style={{
                 ...styles.tabIconContainer,
-                backgroundColor: focused ? "#FF6C00" : "#fff",
+                backgroundColor: "#FF6C00",
               }}
+              onPress={() => navigation.navigate("CreatePosts")}
             >
-              <Icon
-                name="icon-Union"
-                size={size}
-                color={focused ? "#fff" : "#212121"}
-              />
-            </View>
+              <Icon name="icon-Union" size={13} color="#fff" />
+            </TouchableOpacity>
           ),
         }}
-        name="Create"
-        component={CreatePostsScreen}
       />
       <MainTab.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{
           headerShown: false,
           tabBarItemStyle: { height: 0 },
-          tabBarIcon: ({ focused, size, color }) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 ...styles.tabIconContainer,
-                backgroundColor: focused ? "#FF6C00" : "#fff",
               }}
             >
-              <Icon
-                name="icon-user"
-                size={size}
-                color={focused ? "#fff" : "#212121"}
-              />
+              <Icon name="icon-user" size={24} color="#212121" />
             </View>
           ),
         }}
-        name="Profile"
-        component={ProfileScreen}
       />
     </MainTab.Navigator>
   );
@@ -107,12 +96,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     minHeight: 83,
     borderTopColor: "rgba(0, 0, 0, 0.3)",
-    // shadowColor: "rgba(0, 0, 0, 0.3)",
-    // shadowOffset: {
-    //   height: 6,
-    //   width: 0,
-    // },
-    // shadowOpacity: 0.1,
   },
   tabIconContainer: {
     position: "absolute",

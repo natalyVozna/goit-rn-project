@@ -1,16 +1,41 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Icon } from "../App";
 
-export const PostItem = () => {
+export const PostItem = ({ title, id, goToComents }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/img/img-post.png")}
-        fadeDuration={0}
-        style={styles.imgCover}
-      />
-      <View style={styles.userContainer}>
-        <Text style={styles.userNmae}>PostItem </Text>
-        <Text style={styles.userEmail}>PostEmail </Text>
+        source={require("../assets/img/img-1.jpg")}
+        style={styles.image}
+      ></Image>
+      <Text style={styles.title}>{title}</Text>
+      <View style={styles.actionBox}>
+        <View style={styles.addressBox}>
+          <TouchableOpacity
+            style={{ ...styles.btnWrap, marginRight: 24 }}
+            onPress={goToComents}
+          >
+            <Icon name="icon-message-circle" size={24} color={"#FF6C00"} />
+            {/* <Icon name="icon-message-fill" size={24} color={"#FF6C00"} /> */}
+            <Text style={styles.text}>8</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnWrap}>
+            <Icon name="icon-thumbs-up" size={24} color={"#FF6C00"} />
+            <Text style={styles.text}>153</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.btnWrap}>
+          <Icon name="icon-map-pin" size={24} color={"#BDBDBD"} />
+          <Text style={styles.textLink}>Ukraine</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -18,32 +43,60 @@ export const PostItem = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    padding: 15,
-    // borderBottomWidth: 1,
-    // borderBottomColor: "rgba(0,0,0, 0.1)",
+    // flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 35,
+  },
+  image: {
+    width: "100%",
+    height: 240,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 8,
+    resizeMode: "cover",
+    justifyContent: "center",
     alignItems: "center",
-  },
-  imgCover: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
+    borderRadius: 8,
     overflow: "hidden",
-    marginRight: 8,
+    marginBottom: 8,
   },
-  userContainer: {},
-  userNmae: {
-    fontSize: 13,
-    fontFamily: "Roboto-Bold",
-    fontWeight: 700,
-    lineHeight: 15,
+  title: {
     color: "#212121",
+    // fontFamily: "Roboto-Medium",
+    textAlign: "left",
+    alignItems: "flex-start",
+    // fontWeight: 500,
+    fontSize: 16,
+    lineHeight: 19,
+    marginBottom: 11,
   },
-  userEmail: {
+  actionBox: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  addressBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  text: {
     color: "#212121",
-    fontSize: 11,
-    lineHeight: 13,
-    fontFamily: "Roboto-Regular",
-    fontWeight: 400,
+    // fontFamily: "Roboto-Reqular",
+    // fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    marginLeft: 9,
+  },
+  textLink: {
+    color: "#212121",
+    // fontFamily: "Roboto-Reqular",
+    fontSize: 16,
+    lineHeight: 19,
+    marginLeft: 9,
+    textDecorationLine: true,
+  },
+
+  btnWrap: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

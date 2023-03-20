@@ -1,22 +1,61 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { PostItem } from "../../components/PostItem";
+import avatar from "../../assets/img/img-post.png";
+import { useState } from "react";
+import { useEffect } from "react";
 
-export const PostsScreen = () => {
+const DATA = [
+  {
+    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+    title: "First Item",
+  },
+  {
+    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+    title: "Second Item",
+  },
+  // {
+  //   id: "58694a0f-3da1-471f-bd96-145571e29d72",
+  //   title: "Third Item",
+  // },
+  // {
+  //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6",
+  //   title: "Second Item",
+  // },
+  // {
+  //   id: "58694a0f-3da1-471f-bd96-145571e29d76",
+  //   title: "Third Item",
+  // },
+];
+
+export const PostsScreen = ({ route }) => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    if (route.params) {
+      setPosts((prevState) => [...prevState, route.params]);
+    }
+  }, [route.params]);
+  console.log("posts", posts);
   return (
     <View style={styles.container}>
       <View style={styles.containerUser}>
-        <Image
-          source={require("../../assets/img/img-post.png")}
-          fadeDuration={0}
-          style={styles.imgCover}
-        />
+        <Image source={avatar} fadeDuration={0} style={styles.imgCover} />
         <View style={styles.userContainer}>
           <Text style={styles.userNmae}>PostItem </Text>
           <Text style={styles.userEmail}>PostEmail </Text>
         </View>
       </View>
-      {/* <PostItem /> */}
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => (
+          <PostItem
+            goToComents={() => navigation.navigate("Comments")}
+            item={item}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </View>
   );
 };
@@ -33,6 +72,7 @@ const styles = StyleSheet.create({
   containerUser: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 32,
   },
   imgCover: {
     width: 60,

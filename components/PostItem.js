@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import {
+  Dimensions,
   Image,
   ImageBackground,
   StyleSheet,
@@ -8,16 +9,23 @@ import {
   View,
 } from "react-native";
 import { Icon } from "../App";
+import cover from "../assets/img/img-1.jpg";
 
-export const PostItem = ({ item, goToComents }) => {
-  console.log("title, id", item.title, item.id);
+export const PostItem = ({ item, goToComents, type }) => {
+  console.log("title, id", item);
+  const { title, address, photo } = item;
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...styles.container,
+        width: Dimensions.get("window").width - 32,
+      }}
+    >
       <Image
-        source={require("../assets/img/img-1.jpg")}
-        style={styles.image}
+        source={{ uri: photo }}
+        style={{ ...styles.image, width: Dimensions.get("window").width - 32 }}
       ></Image>
-      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.actionBox}>
         <View style={styles.addressBox}>
           <TouchableOpacity
@@ -25,17 +33,18 @@ export const PostItem = ({ item, goToComents }) => {
             onPress={goToComents}
           >
             <Icon name="icon-message-circle" size={24} color={"#FF6C00"} />
-            {/* <Icon name="icon-message-fill" size={24} color={"#FF6C00"} /> */}
             <Text style={styles.text}>8</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnWrap}>
-            <Icon name="icon-thumbs-up" size={24} color={"#FF6C00"} />
-            <Text style={styles.text}>153</Text>
-          </TouchableOpacity>
+          {type === "like" && (
+            <TouchableOpacity style={styles.btnWrap}>
+              <Icon name="icon-thumbs-up" size={24} color={"#FF6C00"} />
+              <Text style={styles.text}>153</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <TouchableOpacity style={styles.btnWrap}>
           <Icon name="icon-map-pin" size={24} color={"#BDBDBD"} />
-          <Text style={styles.textLink}>Ukraine</Text>
+          <Text style={styles.textLink}>{address}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -49,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   image: {
-    width: "100%",
+    // width: "100%",
     height: 240,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,

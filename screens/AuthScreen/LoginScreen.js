@@ -1,10 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   Text,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -14,15 +13,12 @@ import {
 } from "react-native";
 import { AvatarBox } from "../../components/AvatarBox";
 import { TextInputCustom } from "../../components/TextInputCustom";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+import ImageBg from "../../assets/img/photo-bg.jpg";
 
 const initialState = {
   email: "",
   password: "",
 };
-
-// SplashScreen.preventAutoHideAsync();
 
 export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -30,13 +26,6 @@ export const LoginScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
-
-  // const [fontsLoaded] = useFonts({
-  //   "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
-  //   "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
-  //   "Roboto-Bold": require("../assets/fonts/Roboto-Bold.ttf"),
-  // });
-
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get("window").width - 16 * 2;
@@ -46,16 +35,6 @@ export const LoginScreen = ({ navigation }) => {
 
     return () => subscription?.remove();
   }, []);
-
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     const a = await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -69,10 +48,7 @@ export const LoginScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={keyboardHide}>
       {/* <View style={styles.container} onLayout={onLayoutRootView}> */}
       <View style={styles.container}>
-        <ImageBackground
-          source={require("../../assets/img/photo-bg.jpg")}
-          style={styles.image}
-        >
+        <ImageBackground source={ImageBg} style={styles.image}>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : ""}
           >

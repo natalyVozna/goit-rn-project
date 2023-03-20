@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { AvatarBox } from "../../components/AvatarBox";
 import { TextInputCustom } from "../../components/TextInputCustom";
+import ImageBg from "../../assets/img/photo-bg.jpg";
 
 const initialState = {
   nickname: "",
@@ -50,10 +51,7 @@ export const RegistrationScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
-        <ImageBackground
-          source={require("../../assets/img/photo-bg.jpg")}
-          style={styles.image}
-        >
+        <ImageBackground source={ImageBg} style={styles.image}>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : ""}
           >

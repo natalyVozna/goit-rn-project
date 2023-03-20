@@ -13,10 +13,11 @@ import { Icon } from "../App";
 import { CommentCard } from "../components/CommentCard";
 import { Textarea } from "../components/Textarea";
 import { TextInputCustom } from "../components/TextInputCustom";
+import url from "../assets/img/img-post.png";
+import coverImg from "../assets/img/img-1.jpg";
 
 export const CommentsScreen = ({ navigation, route }) => {
   const [comment, setComment] = useState("");
-  const url = require("../assets/img/img-post.png");
   const text =
     "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!";
 
@@ -67,10 +68,7 @@ export const CommentsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../assets/img/img-1.jpg")}
-        style={styles.image}
-      ></Image>
+      <Image source={coverImg} style={styles.image}></Image>
       <FlatList
         style={{ marginBottom: 70 }}
         data={DATA}

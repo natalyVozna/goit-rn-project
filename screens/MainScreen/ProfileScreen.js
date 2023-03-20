@@ -10,15 +10,13 @@ import {
 } from "react-native";
 import { AvatarBox } from "../../components/AvatarBox";
 import { PostItem } from "../../components/PostItem";
+import url from "../../assets/img/avatar.jpg";
+import coverImg from "../../assets/img/photo-bg.jpg";
 
 export const ProfileScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
-
-  // console.log(" navigation", navigation);
-
-  const url = require("../../assets/img/avatar.jpg");
 
   useEffect(() => {
     const onChange = () => {
@@ -56,10 +54,7 @@ export const ProfileScreen = ({ navigation }) => {
   return (
     // <TouchableWithoutFeedback onPress={keyboardHide}>
     <View style={styles.container}>
-      <ImageBackground
-        source={require("../../assets/img/photo-bg.jpg")}
-        style={styles.image}
-      >
+      <ImageBackground source={coverImg} style={styles.image}>
         <View
           style={{
             ...styles.form,
@@ -76,6 +71,7 @@ export const ProfileScreen = ({ navigation }) => {
                 <PostItem
                   goToComents={() => navigation.navigate("Comments")}
                   item={item}
+                  type="like"
                 />
               )}
               keyExtractor={(item) => item.id}

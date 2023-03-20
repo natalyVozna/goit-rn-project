@@ -1,7 +1,9 @@
 import React from "react";
 import { Image, StyleSheet, View, Text, Dimensions } from "react-native";
 
-export const CommentCard = ({ url, id, text, own = false }) => {
+export const CommentCard = ({ item }) => {
+  const { url, id, text, own } = item;
+  console.log("text, text, url", text, own);
   return (
     <View
       style={{

@@ -69,7 +69,7 @@ export const HomeScreen = ({ navigation }) => {
         component={ProfileScreen}
         options={{
           headerShown: false,
-          tabBarItemStyle: { height: 0 },
+          tabBarItemStyle: { height: "100%" },
           tabBarIcon: ({ focused }) => (
             <View
               style={{

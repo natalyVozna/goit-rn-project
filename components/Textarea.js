@@ -9,6 +9,7 @@ export const Textarea = ({
   onFocus,
   onBlur,
   onPressBtn,
+  customStyle,
 }) => {
   const [borderColorInput, setBorderColorInput] = useState("#E8E8E8");
   const [backgroundColorInput, setBackgroundColorInput] = useState("#F6F6F6");
@@ -30,7 +31,14 @@ export const Textarea = ({
   };
 
   return (
-    <View style={{ position: "relative", width: "100%", marginTop: 31 }}>
+    <View
+      style={{
+        position: "relative",
+        width: "100%",
+        marginTop: 31,
+        // ...customStyle,
+      }}
+    >
       <TextInput
         editable
         multiline

@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import { Icon } from "../App";
 
-export const PostItem = ({ title, id, goToComents }) => {
+export const PostItem = ({ item, goToComents }) => {
+  console.log("title, id", item.title, item.id);
   return (
     <View style={styles.container}>
       <Image
         source={require("../assets/img/img-1.jpg")}
         style={styles.image}
       ></Image>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>{item.title}</Text>
       <View style={styles.actionBox}>
         <View style={styles.addressBox}>
           <TouchableOpacity

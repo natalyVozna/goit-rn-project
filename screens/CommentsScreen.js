@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import {
   Alert,
+  FlatList,
   Image,
   StyleSheet,
   Text,
@@ -31,6 +32,33 @@ export const CommentsScreen = ({ navigation, route }) => {
     );
   };
 
+  const DATA = [
+    {
+      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+      text: "Really love your most recent photo.",
+      own: false,
+      url: url,
+    },
+    {
+      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+      text: "I’ve been trying to capture the same thing for a few months and would love some tips!",
+      own: true,
+      url: url,
+    },
+    {
+      id: "58694a0f-3da1-471f-bd96-145571e29d72",
+      text: "Really love your most recent photo.",
+      own: false,
+      url: url,
+    },
+    {
+      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6",
+      text: "I’ve been trying to capture the same thing for a few months and would love some tips!",
+      own: true,
+      url: url,
+    },
+  ];
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: (props) => <BackBtn onPress={() => navigation.goBack()} />,
@@ -43,14 +71,22 @@ export const CommentsScreen = ({ navigation, route }) => {
         source={require("../assets/img/img-1.jpg")}
         style={styles.image}
       ></Image>
-      <CommentCard url={url} text={text} />
-      <CommentCard url={url} text={text} own={true} />
-      <Textarea
-        placeholder="Комментировать..."
-        handleChangeText={(value) => setComment(value)}
-        value={comment}
-        onPressBtn={() => Alert.alert("Send comment")}
+      <FlatList
+        style={{ marginBottom: 70 }}
+        data={DATA}
+        renderItem={({ item }) => <CommentCard item={item} />}
+        keyExtractor={(item) => item.id}
       />
+
+      <View style={styles.textarea}>
+        <Textarea
+          placeholder="Комментировать..."
+          handleChangeText={(value) => setComment(value)}
+          value={comment}
+          onPressBtn={() => Alert.alert("Send comment")}
+          // customStyle={styles.textarea}
+        />
+      </View>
     </View>
   );
 };
@@ -75,5 +111,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     marginBottom: 32,
+  },
+  textarea: {
+    position: "absolute",
+    bottom: 16,
+    width: "100%",
+    left: 16,
   },
 });

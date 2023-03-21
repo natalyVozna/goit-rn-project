@@ -1,10 +1,17 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "../../App";
 import { PostsScreen } from "./PostsScreen";
 import { CreatePostsScreen } from "./CreatePostsScreen";
 import { ProfileScreen } from "./ProfileScreen";
-import { CommentsScreen } from "../CommentsScreen";
+import { CommentsScreen } from "../NestedScreens/CommentsScreen";
+import { BtnTabBottom } from "../../components/BtnTabBottom";
 
 const MainTab = createBottomTabNavigator();
 
@@ -23,13 +30,16 @@ export const HomeScreen = ({ navigation }) => {
 
   return (
     <MainTab.Navigator
-      screenOptions={{ tabBarShowLabel: false, tabBarStyle: styles.tabBar }}
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: styles.tabBar,
+      }}
     >
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}
         options={{
-          title: "Публикации",
+          headerShown: false,
           headerRight: (props) => <LogOutBtn />,
           tabBarItemStyle: { height: 0 },
           headerTitleStyle: styles.titleHeader,
@@ -51,16 +61,18 @@ export const HomeScreen = ({ navigation }) => {
         options={{
           headerTitle: "Создать публикацию",
           tabBarItemStyle: { height: 0 },
-          tabBarIcon: ({ focused, size, color }) => (
-            <TouchableOpacity
-              style={{
-                ...styles.tabIconContainer,
-                backgroundColor: "#FF6C00",
-              }}
+          tabBarIcon: () => (
+            <BtnTabBottom
               onPress={() => navigation.navigate("CreatePosts")}
-            >
-              <Icon name="icon-Union" size={13} color="#fff" />
-            </TouchableOpacity>
+              icon="icon-Union"
+              size={13}
+              color="#fff"
+              customStyle={{
+                backgroundColor: "#FF6C00",
+                position: "absolute",
+                top: 9,
+              }}
+            />
           ),
         }}
       />
@@ -69,15 +81,24 @@ export const HomeScreen = ({ navigation }) => {
         component={ProfileScreen}
         options={{
           headerShown: false,
-          tabBarItemStyle: { height: "100%" },
+          tabBarItemStyle: {
+            height: 0,
+            // width: Dimensions.get("window").width,
+          },
+          tabBarPosition: "bottom",
+
           tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                ...styles.tabIconContainer,
+            <BtnTabBottom
+              onPress={() => navigation.navigate("Profile")}
+              icon="icon-user"
+              size={24}
+              color="#212121"
+              customStyle={{
+                backgroundColor: "#fff",
+                position: "absolute",
+                top: 9,
               }}
-            >
-              <Icon name="icon-user" size={24} color="#212121" />
-            </View>
+            />
           ),
         }}
       />
@@ -92,7 +113,7 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     position: "absolute",
-    paddingHorizontal: 50,
+    paddingHorizontal: 70,
     flexDirection: "row",
     minHeight: 83,
     borderTopColor: "rgba(0, 0, 0, 0.3)",

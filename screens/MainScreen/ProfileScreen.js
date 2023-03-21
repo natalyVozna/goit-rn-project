@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -12,6 +13,7 @@ import { AvatarBox } from "../../components/AvatarBox";
 import { PostItem } from "../../components/PostItem";
 import url from "../../assets/img/avatar.jpg";
 import coverImg from "../../assets/img/photo-bg.jpg";
+import { BtnTabBottom } from "../../components/BtnTabBottom";
 
 export const ProfileScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
@@ -33,27 +35,19 @@ export const ProfileScreen = ({ navigation }) => {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
       title: "First Item",
     },
-    // {
-    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    //   title: "Second Item",
-    // },
-    // {
-    //   id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    //   title: "Third Item",
-    // },
-    // {
-    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6",
-    //   title: "Second Item",
-    // },
-    // {
-    //   id: "58694a0f-3da1-471f-bd96-145571e29d76",
-    //   title: "Third Item",
-    // },
+    {
+      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+      title: "Second Item",
+    },
+    {
+      id: "58694a0f-3da1-471f-bd96-145571e29d72",
+      title: "Third Item",
+    },
   ];
 
   return (
     // <TouchableWithoutFeedback onPress={keyboardHide}>
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ImageBackground source={coverImg} style={styles.image}>
         <View
           style={{
@@ -65,21 +59,46 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={{ ...styles.content, width: dimensions }}>
             <Text style={styles.title}>Natali Romanova</Text>
             {/* <PostItem /> */}
-            <FlatList
-              data={DATA}
-              renderItem={({ item }) => (
+            <View>
+              {DATA.map((item) => (
                 <PostItem
-                  goToComents={() => navigation.navigate("Comments")}
+                  key={item.id.toString()}
                   item={item}
                   type="like"
+                  iconMessage="icon-message-color"
+                  navigation={navigation}
                 />
-              )}
-              keyExtractor={(item) => item.id}
-            />
+              ))}
+            </View>
           </View>
         </View>
       </ImageBackground>
-    </View>
+      <View style={styles.footer}>
+        <View style={styles.tabsBottom}>
+          <BtnTabBottom
+            onPress={() => navigation.navigate("Posts")}
+            icon="icon-grid"
+            size={24}
+            color="#212121"
+            customStyle={{ backgroundColor: "#fff" }}
+          />
+          <BtnTabBottom
+            // onPress={() => navigation.navigate("Profile")}
+            icon="icon-user"
+            size={24}
+            color="#fff"
+            customStyle={{ backgroundColor: "#FF6C00" }}
+          />
+          <BtnTabBottom
+            onPress={() => navigation.navigate("CreatePosts")}
+            icon="icon-Union"
+            size={13}
+            color="#212121"
+            customStyle={{ backgroundColor: "#fff" }}
+          />
+        </View>
+      </View>
+    </ScrollView>
     // </TouchableWithoutFeedback>
   );
 };
@@ -103,8 +122,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginTop: 200,
-    // minHeight: 600,
     height: "100%",
+    marginBottom: 10,
   },
   content: {
     marginHorizontal: 16,
@@ -118,5 +137,23 @@ const styles = StyleSheet.create({
     color: "#212121",
     marginTop: 92,
     marginBottom: 33,
+  },
+  footer: {
+    height: 83,
+    width: Dimensions.get("window").width,
+    borderTopColor: "rgba(0, 0, 0, 0.3)",
+    borderTopWidth: 1,
+    alignItems: "center",
+  },
+  tabsBottom: {
+    height: 83,
+    width: Dimensions.get("window").width,
+    paddingHorizontal: 70,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 9,
+  },
+  icon: {
+    position: "relative",
   },
 });

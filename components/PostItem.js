@@ -11,8 +11,7 @@ import {
 import { Icon } from "../App";
 import cover from "../assets/img/img-1.jpg";
 
-export const PostItem = ({ item, goToComents, type }) => {
-  console.log("title, id", item);
+export const PostItem = ({ item, type, navigation, iconMessage }) => {
   const { title, address, photo } = item;
   return (
     <View
@@ -30,9 +29,10 @@ export const PostItem = ({ item, goToComents, type }) => {
         <View style={styles.addressBox}>
           <TouchableOpacity
             style={{ ...styles.btnWrap, marginRight: 24 }}
-            onPress={goToComents}
+            onPress={() => navigation.navigate("Comments", { item })}
+            // onPress={goToComents}
           >
-            <Icon name="icon-message-circle" size={24} color={"#FF6C00"} />
+            <Icon name={iconMessage} size={24} color={"#FF6C00"} />
             <Text style={styles.text}>8</Text>
           </TouchableOpacity>
           {type === "like" && (
@@ -42,7 +42,10 @@ export const PostItem = ({ item, goToComents, type }) => {
             </TouchableOpacity>
           )}
         </View>
-        <TouchableOpacity style={styles.btnWrap}>
+        <TouchableOpacity
+          style={styles.btnWrap}
+          onPress={() => navigation.navigate("Map", { item })}
+        >
           <Icon name="icon-map-pin" size={24} color={"#BDBDBD"} />
           <Text style={styles.textLink}>{address}</Text>
         </TouchableOpacity>

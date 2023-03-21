@@ -15,39 +15,43 @@ import {
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 
 import { Icon } from "../../App";
 import { TextInputPost } from "../../components/TextinputPost";
 import { Button } from "../../components/Button";
+import { BackBtn } from "../../components/BackBtn";
 
 const initialState = {
   name: "",
   address: "",
 };
 
-const BackBtn = ({ onPress }) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.5}
-      onPress={onPress}
-      style={{ marginRight: 10 }}
-    >
-      <Icon name="icon-arrow-left" size={20} color={"#212121"} />
-    </TouchableOpacity>
-  );
-};
-
 export const CreatePostsScreen = ({ navigation }) => {
-  const [photo, setPhoto] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [backgroundColorBtn, setBackgroundColorBtn] = useState("#F6F6F6");
   const [colorBtn, setColorBtn] = useState("#BDBDBD");
   // const [cameraRef, setCameraRef] = useState(null);
+
+  const [photo, setPhoto] = useState("");
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const [hasPermission, setHasPermission] = useState(null);
   const refCamera = useRef(null);
+
+  const [location, setLocation] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+    })();
+  }, []);
+  console.log("GETlocat", location);
 
   useEffect(() => {
     (async () => {
@@ -60,7 +64,12 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: (props) => <BackBtn onPress={() => navigation.goBack()} />,
+      headerLeft: (props) => (
+        <BackBtn
+          customStyle={{ marginRight: 10 }}
+          onPress={() => navigation.goBack()}
+        />
+      ),
     });
   }, []);
 
@@ -75,12 +84,17 @@ export const CreatePostsScreen = ({ navigation }) => {
   }, [state, photo]);
 
   const takePhoto = async () => {
-    // const photo = await cameraRef.takePictureAsync();
-    // setPhoto(photo.uri);
     if (refCamera) {
       try {
         const data = await refCamera.current.takePictureAsync();
         setPhoto(data.uri);
+        let location = await Location.getCurrentPositionAsync({});
+        // console.log("locat", location);
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        setLocation(coords);
       } catch (e) {
         console.log(e);
       }
@@ -88,10 +102,11 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   const sendPhoto = async () => {
-    navigation.navigate("Posts", {
+    navigation.navigate("DefaultScreen", {
       photo,
       title: state.name,
       address: state.address,
+      ...location,
     });
   };
 

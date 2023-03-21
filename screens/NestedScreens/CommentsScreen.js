@@ -1,37 +1,18 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import {
-  Alert,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Icon } from "../App";
-import { CommentCard } from "../components/CommentCard";
-import { Textarea } from "../components/Textarea";
-import { TextInputCustom } from "../components/TextInputCustom";
-import url from "../assets/img/img-post.png";
-import coverImg from "../assets/img/img-1.jpg";
+import { Alert, FlatList, Image, StyleSheet, View } from "react-native";
+import { CommentCard } from "../../components/CommentCard";
+import { Textarea } from "../../components/Textarea";
+import url from "../../assets/img/img-post.png";
+import coverImg from "../../assets/img/img-1.jpg";
+import { BackBtn } from "../../components/BackBtn";
 
 export const CommentsScreen = ({ navigation, route }) => {
+  console.log("item", route.params.item);
+  const { item } = route.params;
   const [comment, setComment] = useState("");
   const text =
     "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!";
-
-  const BackBtn = ({ onPress }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={onPress}
-        style={{ marginLeft: 10 }}
-      >
-        <Icon name="icon-arrow-left" size={20} color={"#212121"} />
-      </TouchableOpacity>
-    );
-  };
 
   const DATA = [
     {
@@ -42,18 +23,6 @@ export const CommentsScreen = ({ navigation, route }) => {
     },
     {
       id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      text: "I’ve been trying to capture the same thing for a few months and would love some tips!",
-      own: true,
-      url: url,
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      text: "Really love your most recent photo.",
-      own: false,
-      url: url,
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6",
       text: "I’ve been trying to capture the same thing for a few months and would love some tips!",
       own: true,
       url: url,
@@ -73,7 +42,7 @@ export const CommentsScreen = ({ navigation, route }) => {
         style={{ marginBottom: 70 }}
         data={DATA}
         renderItem={({ item }) => <CommentCard item={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
       />
 
       <View style={styles.textarea}>

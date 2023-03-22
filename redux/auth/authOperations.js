@@ -51,11 +51,13 @@ export const registerUser = createAsyncThunk(
         displayName: nickname,
       });
       const { uid, displayName } = auth.currentUser;
+      console.log(auth.currentUser);
 
       thunkAPI.dispatch(
         updateUserProfile({
           userId: uid,
           nickname: displayName,
+          email,
         })
       );
       // return user;
@@ -94,11 +96,13 @@ export const authStateChangedUser = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       await onAuthStateChanged(auth, (user) => {
+        console.log("user", user);
         if (user) {
           thunkAPI.dispatch(
             updateUserProfile({
               userId: user.uid,
               nickname: user.displayName,
+              email: user.email,
             })
           );
           thunkAPI.dispatch(authStateChanged({ stateChange: true }));

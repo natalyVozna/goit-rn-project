@@ -6,9 +6,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { onSnapshot, collection } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import { useSelector } from "react-redux";
 
 export const DefaultScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
+  const { email, nickname } = useSelector((state) => state.auth);
 
   const getAllPost = async () => {
     const dbRef = collection(db, "posts");
@@ -26,8 +28,8 @@ export const DefaultScreenPosts = ({ route, navigation }) => {
       <View style={styles.containerUser}>
         <Image source={avatar} fadeDuration={0} style={styles.imgCover} />
         <View style={styles.userContainer}>
-          <Text style={styles.userNmae}>PostItem </Text>
-          <Text style={styles.userEmail}>PostEmail </Text>
+          <Text style={styles.userNmae}>{nickname} </Text>
+          <Text style={styles.userEmail}>{email} </Text>
         </View>
       </View>
       <FlatList

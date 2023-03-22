@@ -46,6 +46,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   const refCamera = useRef(null);
 
   const [location, setLocation] = useState({});
+  console.log("userId", userId, state, location);
 
   //дозвіл на отримання Location
   useEffect(() => {
@@ -125,9 +126,17 @@ export const CreatePostsScreen = ({ navigation }) => {
 
     return uploadedPhoto;
   };
+  console.log("obd", {
+    title: state.name,
+    address: state.address,
+    userId,
+    nickname,
+    ...location,
+  });
 
   const uploadPostToServer = async () => {
     const uploadedPhoto = await uploadPhotoToServer();
+    console.log("uploadedPhoto", uploadedPhoto);
     try {
       const docRef = await addDoc(collection(db, "posts"), {
         photo: uploadedPhoto,

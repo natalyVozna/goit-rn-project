@@ -1,15 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, logoutUser, registerUser } from "./authOperations";
 
-// export const authSlice = createSlice({
-//   name: "auth",
-//   initialState: {
-//     userId: null,
-//     nickname: null,
-//   },
-//   reducers: {},
-// });
-
 const handlePending = (state) => {
   state.isLoading = true;
   state.error = null;
@@ -30,6 +21,7 @@ const handleRejected = (state, action) => {
 const initialState = {
   userId: null,
   nickname: null,
+  email: null,
   isLoading: false,
   error: null,
   isAuth: false,
@@ -41,8 +33,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     updateUserProfile(state, { payload }) {
+      console.log("updateUserPr", payload);
       state.userId = payload?.userId;
       state.nickname = payload?.nickname;
+      state.email = payload?.email;
     },
     authStateChanged(state, { payload }) {
       state.stateChange = payload?.stateChange;
@@ -54,8 +48,9 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, handleRejected)
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.email = action?.payload?.email;
-        state.userId = action?.payload?.uid;
+        state.email = action.payload?.email;
+        state.userId = action.payload?.uid;
+        state.email = action.payload?.email;
         state.isAuth = true;
       })
 

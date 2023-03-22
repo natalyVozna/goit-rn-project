@@ -26,7 +26,6 @@ export const authSignUpUser =
         email,
         password
       );
-      console.log("user", user);
     } catch (error) {
       console.log("err", error);
       console.log("err.message", error.message);
@@ -71,7 +70,6 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      console.log("email, passw, userord", email, password, user);
       return user;
     } catch (error) {
       console.log("error", error);

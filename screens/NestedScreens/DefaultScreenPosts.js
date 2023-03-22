@@ -13,12 +13,7 @@ export const DefaultScreenPosts = ({ route, navigation }) => {
   const getAllPost = async () => {
     const dbRef = collection(db, "posts");
     onSnapshot(dbRef, (docsSnap) => {
-      const postsArr = [];
-      docsSnap.forEach((doc) => {
-        postsArr.push({ ...doc.data(), id: doc.id });
-      });
-
-      setPosts(postsArr);
+      setPosts(docsSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
 
@@ -26,7 +21,6 @@ export const DefaultScreenPosts = ({ route, navigation }) => {
     getAllPost();
   }, []);
 
-  console.log("post", posts);
   return (
     <View style={styles.container}>
       <View style={styles.containerUser}>

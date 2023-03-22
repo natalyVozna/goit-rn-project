@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, View, Text, Dimensions } from "react-native";
+import moment from "moment";
 
-export const CommentCard = ({ item }) => {
-  const { url, id, text, own } = item;
-  console.log("text, text, url", text, own);
+export const CommentCard = ({ item, photo, own, avatar }) => {
+  const [formatDate, setFormatDate] = useState("");
+  const { comment, date } = item;
+
+  useEffect(() => {
+    if (date) {
+      setFormatDate(moment(date).format("DD MMMM, YYYY | h:mm"));
+    } else {
+      setFormatDate(moment(Date.now()).format("DD MMMM, YYYY | h:mm"));
+    }
+  }, [date]);
+
   return (
     <View
       style={{
@@ -12,7 +22,8 @@ export const CommentCard = ({ item }) => {
       }}
     >
       <Image
-        source={url}
+        // source={{ uri: photo }}
+        source={avatar}
         style={{
           ...styles.image,
           marginLeft: own && 16,
@@ -27,14 +38,14 @@ export const CommentCard = ({ item }) => {
           borderTopLeftRadius: own ? 6 : 0,
         }}
       >
-        <Text style={styles.comment}>{text}</Text>
+        <Text style={styles.comment}>{comment}</Text>
         <Text
           style={{
             ...styles.date,
             textAlign: own ? "left" : "right",
           }}
         >
-          09 июня, 2020 | 08:40
+          {formatDate}
         </Text>
       </View>
     </View>

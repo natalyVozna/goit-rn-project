@@ -43,7 +43,6 @@ export const LoginScreen = ({ navigation }) => {
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
     dispatch(loginUser(state));
 
     setState(initialState);

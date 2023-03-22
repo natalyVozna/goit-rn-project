@@ -50,7 +50,7 @@ export const Textarea = ({
         numberOfLines={4}
         placeholder={placeholder}
         placeholderTextColor={"#BDBDBD"}
-        maxLength={40}
+        maxLength={140}
         onFocus={customOnFocus}
         onBlur={customOnBlur}
         value={value}
@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 100,
     paddingLeft: 16,
+    paddingRight: 42,
     paddingTop: 14,
     height: 50,
     alignItems: "center",

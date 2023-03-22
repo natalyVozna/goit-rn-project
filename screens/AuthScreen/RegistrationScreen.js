@@ -44,7 +44,6 @@ export const RegistrationScreen = ({ navigation }) => {
   const handleSubmit = (eventType) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
     dispatch(registerUser(state));
 
     setState(initialState);

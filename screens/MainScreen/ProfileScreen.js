@@ -14,13 +14,31 @@ import { PostItem } from "../../components/PostItem";
 import url from "../../assets/img/avatar.jpg";
 import coverImg from "../../assets/img/photo-bg.jpg";
 import { BtnTabBottom } from "../../components/BtnTabBottom";
+import { useSelector } from "react-redux";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../../firebase/config";
 
 export const ProfileScreen = ({ navigation }) => {
+  const { userId } = useSelector((state) => state.auth);
+  const [posts, setPosts] = useState([]);
+  const [allComment, setAllComment] = useState([]);
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
 
+  const getUserPosts = async () => {
+    const docRef = query(
+      collection(db, "posts"),
+      where("userId", "==", userId)
+    );
+    onSnapshot(docRef, (data) => {
+      setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
   useEffect(() => {
+    getUserPosts();
+
     const onChange = () => {
       const width = Dimensions.get("window").width - 16 * 2;
       setDimensions(width);
@@ -29,21 +47,6 @@ export const ProfileScreen = ({ navigation }) => {
 
     return () => subscription?.remove();
   }, []);
-
-  const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-  ];
 
   return (
     // <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -60,7 +63,7 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={styles.title}>Natali Romanova</Text>
             {/* <PostItem /> */}
             <View>
-              {DATA.map((item) => (
+              {posts?.map((item) => (
                 <PostItem
                   key={item.id.toString()}
                   item={item}

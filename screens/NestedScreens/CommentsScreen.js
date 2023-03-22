@@ -6,28 +6,23 @@ import { Textarea } from "../../components/Textarea";
 import url from "../../assets/img/img-post.png";
 import coverImg from "../../assets/img/img-1.jpg";
 import { BackBtn } from "../../components/BackBtn";
+import { useSelector } from "react-redux";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../../firebase/config";
 
 export const CommentsScreen = ({ navigation, route }) => {
-  console.log("item", route.params.item);
-  const { item } = route.params;
+  const { photo, userId, postId } = route.params;
+  const { userId: myId, nickname } = useSelector((state) => state.auth);
   const [comment, setComment] = useState("");
-  const text =
-    "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!";
-
-  const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      text: "Really love your most recent photo.",
-      own: false,
-      url: url,
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      text: "I’ve been trying to capture the same thing for a few months and would love some tips!",
-      own: true,
-      url: url,
-    },
-  ];
+  const [allComment, setAllComment] = useState([]);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -35,14 +30,40 @@ export const CommentsScreen = ({ navigation, route }) => {
     });
   }, []);
 
+  useEffect(() => {
+    setIsOwner(myId === userId);
+  }, [route.params.item]);
+
+  const createComment = async () => {
+    const docRef = doc(db, "posts", postId);
+    await addDoc(collection(docRef, "comments"), {
+      nickname,
+      comment,
+      date: Date.now(),
+    });
+    setComment("");
+  };
+
+  const getAllComments = async () => {
+    const docRef = collection(db, "posts", postId, "comments");
+    onSnapshot(docRef, (data) => {
+      setAllComment(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
+  useEffect(() => {
+    getAllComments();
+  }, []);
   return (
     <View style={styles.container}>
-      <Image source={coverImg} style={styles.image}></Image>
+      <Image source={{ uri: photo }} style={styles.image}></Image>
       <FlatList
         style={{ marginBottom: 70 }}
-        data={DATA}
-        renderItem={({ item }) => <CommentCard item={item} />}
-        keyExtractor={(item, index) => index.toString()}
+        data={allComment}
+        renderItem={({ item }) => (
+          <CommentCard item={item} photo={photo} own={isOwner} avatar={url} />
+        )}
+        keyExtractor={(item) => item.id}
       />
 
       <View style={styles.textarea}>
@@ -50,7 +71,7 @@ export const CommentsScreen = ({ navigation, route }) => {
           placeholder="Комментировать..."
           handleChangeText={(value) => setComment(value)}
           value={comment}
-          onPressBtn={() => Alert.alert("Send comment")}
+          onPressBtn={() => createComment()}
           // customStyle={styles.textarea}
         />
       </View>
@@ -66,6 +87,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 32,
     backgroundColor: "#fff",
+    position: "relative",
   },
   image: {
     width: "100%",

@@ -5,7 +5,9 @@ import { RegistrationScreen } from "./screens/AuthScreen/RegistrationScreen";
 import { CreatePostsScreen } from "./screens/MainScreen/CreatePostsScreen";
 
 import { HomeScreen } from "./screens/MainScreen/HomeScreen";
+import { PostsScreen } from "./screens/MainScreen/PostsScreen";
 import { ProfileScreen } from "./screens/MainScreen/ProfileScreen";
+import { CommentsScreen } from "./screens/NestedScreens/CommentsScreen";
 
 const AuthStack = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,6 +46,11 @@ export const useRoute = (isAuth) => {
         options={{ headerShown: false }}
         name="Profile"
         component={ProfileScreen}
+      />
+      <Stack.Screen
+        options={{ title: "Комментарии" }}
+        name="Comments"
+        component={CommentsScreen}
       />
     </Stack.Navigator>
   );

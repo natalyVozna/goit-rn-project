@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -10,9 +11,22 @@ import {
 } from "react-native";
 import { Icon } from "../App";
 import cover from "../assets/img/img-1.jpg";
+import { db } from "../firebase/config";
 
 export const PostItem = ({ item, type, navigation, iconMessage }) => {
-  const { title, address, photo } = item;
+  const { title, address, photo, id, userId } = item;
+  const [allComment, setAllComment] = useState([]);
+
+  const getComments = async () => {
+    const docRef = collection(db, "posts", id, "comments");
+    onSnapshot(docRef, (data) => {
+      setAllComment(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+  useEffect(() => {
+    getComments();
+  }, []);
+
   return (
     <View
       style={{
@@ -29,11 +43,13 @@ export const PostItem = ({ item, type, navigation, iconMessage }) => {
         <View style={styles.addressBox}>
           <TouchableOpacity
             style={{ ...styles.btnWrap, marginRight: 24 }}
-            onPress={() => navigation.navigate("Comments", { item })}
+            onPress={() =>
+              navigation.navigate("Comments", { postId: id, photo, userId })
+            }
             // onPress={goToComents}
           >
             <Icon name={iconMessage} size={24} color={"#FF6C00"} />
-            <Text style={styles.text}>8</Text>
+            <Text style={styles.text}>{allComment.length}</Text>
           </TouchableOpacity>
           {type === "like" && (
             <TouchableOpacity style={styles.btnWrap}>

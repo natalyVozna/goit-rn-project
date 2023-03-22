@@ -122,7 +122,6 @@ export const CreatePostsScreen = ({ navigation }) => {
     const uploadedPhoto = await getDownloadURL(
       ref(storage, `postImages/${uniqueIdPost}.jpg`)
     );
-    console.log("data", uploadedPhoto);
 
     return uploadedPhoto;
   };
@@ -130,7 +129,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   const uploadPostToServer = async () => {
     const uploadedPhoto = await uploadPhotoToServer();
     try {
-      console.log("uploadedPhoto", uploadedPhoto, db);
       const docRef = await addDoc(collection(db, "posts"), {
         photo: uploadedPhoto,
         title: state.name,
@@ -139,7 +137,6 @@ export const CreatePostsScreen = ({ navigation }) => {
         nickname,
         ...location,
       });
-      console.log("Document written with ID: ", docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -166,7 +163,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   const keyboardHide = (eventType) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
     // setState(initialState);
   };
 

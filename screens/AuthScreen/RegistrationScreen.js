@@ -14,6 +14,8 @@ import {
 import { AvatarBox } from "../../components/AvatarBox";
 import { TextInputCustom } from "../../components/TextInputCustom";
 import ImageBg from "../../assets/img/photo-bg.jpg";
+import { authSignUpUser, registerUser } from "../../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   nickname: "",
@@ -27,6 +29,7 @@ export const RegistrationScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onChange = () => {
@@ -38,18 +41,22 @@ export const RegistrationScreen = ({ navigation }) => {
     return () => subscription?.remove();
   }, []);
 
-  const keyboardHide = (eventType) => {
+  const handleSubmit = (eventType) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
+    dispatch(registerUser(state));
 
     setState(initialState);
+  };
 
-    navigation.navigate("Home");
+  const keybordHide = () => {
+    Keyboard.dismiss();
+    setIsShowKeyboard(false);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={keybordHide}>
       <View style={styles.container}>
         <ImageBackground source={ImageBg} style={styles.image}>
           <KeyboardAvoidingView
@@ -92,7 +99,7 @@ export const RegistrationScreen = ({ navigation }) => {
                     <TouchableOpacity
                       activeOpacity={0.7}
                       style={styles.btn}
-                      onPress={keyboardHide}
+                      onPress={handleSubmit}
                     >
                       <Text style={styles.btnText}>Зарегистрироваться</Text>
                     </TouchableOpacity>

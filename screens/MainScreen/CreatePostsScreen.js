@@ -16,11 +16,16 @@ import {
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+import { nanoid } from "nanoid";
 
 import { Icon } from "../../App";
 import { TextInputPost } from "../../components/TextinputPost";
 import { Button } from "../../components/Button";
 import { BackBtn } from "../../components/BackBtn";
+import { db, storage } from "../../firebase/config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import { useSelector } from "react-redux";
 
 const initialState = {
   name: "",
@@ -32,7 +37,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [backgroundColorBtn, setBackgroundColorBtn] = useState("#F6F6F6");
   const [colorBtn, setColorBtn] = useState("#BDBDBD");
-  // const [cameraRef, setCameraRef] = useState(null);
+  const { userId, nickname } = useSelector((state) => state.auth);
 
   const [photo, setPhoto] = useState("");
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -42,17 +47,24 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const [location, setLocation] = useState({});
 
+  //дозвіл на отримання Location
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+        console.log("Permission to access location was denied");
       }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
     })();
   }, []);
-  console.log("GETlocat", location);
 
+  //дозвіл на відкриття фотокамери
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -62,6 +74,7 @@ export const CreatePostsScreen = ({ navigation }) => {
     })();
   }, []);
 
+  //логіка для кнопкт назад в head
   useEffect(() => {
     navigation.setOptions({
       headerLeft: (props) => (
@@ -88,26 +101,54 @@ export const CreatePostsScreen = ({ navigation }) => {
       try {
         const data = await refCamera.current.takePictureAsync();
         setPhoto(data.uri);
-        let location = await Location.getCurrentPositionAsync({});
-        // console.log("locat", location);
-        const coords = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        };
-        setLocation(coords);
       } catch (e) {
         console.log(e);
       }
     }
   };
 
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(photo);
+    //переводимо наше фото у формат через спосиь який рекомендує firebase
+    const file = await response.blob();
+    const uniqueIdPost = Date.now().toString();
+
+    const storageRef = await ref(storage, `postImages/${uniqueIdPost}.jpg`);
+
+    //загружаємл фото на сервер   path storageRef
+    await uploadBytes(storageRef, file);
+
+    //отримуємо силку на фото
+    const uploadedPhoto = await getDownloadURL(
+      ref(storage, `postImages/${uniqueIdPost}.jpg`)
+    );
+    console.log("data", uploadedPhoto);
+
+    return uploadedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    const uploadedPhoto = await uploadPhotoToServer();
+    try {
+      console.log("uploadedPhoto", uploadedPhoto, db);
+      const docRef = await addDoc(collection(db, "posts"), {
+        photo: uploadedPhoto,
+        title: state.name,
+        address: state.address,
+        userId,
+        nickname,
+        ...location,
+      });
+      console.log("Document written with ID: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   const sendPhoto = async () => {
-    navigation.navigate("DefaultScreen", {
-      photo,
-      title: state.name,
-      address: state.address,
-      ...location,
-    });
+    uploadPostToServer();
+    navigation.navigate("DefaultScreen");
+    // setState(initialState);
   };
 
   const savePhoto = async () => {
@@ -126,7 +167,6 @@ export const CreatePostsScreen = ({ navigation }) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
-
     // setState(initialState);
   };
 
@@ -137,23 +177,72 @@ export const CreatePostsScreen = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
+  const renderCameraBlock = () => {
+    if (!isShowKeyboard) {
+      if (!photo) {
+        return (
+          <Camera ref={refCamera} type={type} style={styles.camera}>
+            <View style={styles.optionBox}>
+              <Button
+                icon="retweet"
+                color={type === CameraType.back ? "#BDBDBD" : "#fff"}
+                onPress={() => {
+                  setType(
+                    type === CameraType.back
+                      ? CameraType.front
+                      : CameraType.back
+                  );
+                }}
+              />
+              <Button
+                icon="flash"
+                color={
+                  flash === Camera.Constants.FlashMode.off ? "#BDBDBD" : "#fff"
+                }
+                onPress={() => {
+                  setFlash(
+                    flash === Camera.Constants.FlashMode.off
+                      ? Camera.Constants.FlashMode.on
+                      : Camera.Constants.FlashMode.off
+                  );
+                }}
+              />
+            </View>
+            <Button
+              icon={"camera"}
+              color="#BDBDBD"
+              customStyle={styles.cameraBtn}
+              size={20}
+              onPress={() => takePhoto()}
+            />
+          </Camera>
+        );
+      } else {
+        return (
+          <Image
+            source={{ uri: photo }}
+            style={{
+              ...styles.camera,
+            }}
+          />
+        );
+      }
+    }
+
+    return null;
+  };
+
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         {/* <Camera ref={setCameraRef} type={type} style={styles.camera}> */}
         {!photo ? (
-          <Camera ref={refCamera} type={type} style={styles.camera}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingHorizontal: 30,
-                width: "100%",
-                position: "absolute",
-                top: 20,
-                left: 0,
-              }}
-            >
+          <Camera
+            ref={refCamera}
+            type={type}
+            style={{ ...styles.camera, height: isShowKeyboard ? 100 : 240 }}
+          >
+            <View style={styles.optionBox}>
               <Button
                 icon="retweet"
                 color={type === CameraType.back ? "#BDBDBD" : "#fff"}
@@ -192,9 +281,12 @@ export const CreatePostsScreen = ({ navigation }) => {
             source={{ uri: photo }}
             style={{
               ...styles.camera,
+              height: isShowKeyboard ? 100 : 240,
             }}
           />
         )}
+
+        {/* {renderCameraBlock()} */}
 
         <TouchableOpacity
           style={{ marginBottom: 48 }}
@@ -271,7 +363,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   camera: {
-    height: 240,
+    // height: 240,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     justifyContent: "center",
@@ -279,11 +371,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     position: "relative",
   },
+  optionBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 30,
+    width: "100%",
+    position: "absolute",
+    top: 20,
+    left: 0,
+  },
   photoContainer: {
     position: "absolute",
     top: 0,
     left: 0,
-    height: 240,
+    // height: 240,
     width: "100%",
     borderColor: "red",
     backgroundColor: "red",

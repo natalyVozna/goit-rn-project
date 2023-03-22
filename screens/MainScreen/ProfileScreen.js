@@ -76,7 +76,7 @@ export const ProfileScreen = ({ navigation }) => {
       <View style={styles.footer}>
         <View style={styles.tabsBottom}>
           <BtnTabBottom
-            onPress={() => navigation.navigate("Posts")}
+            onPress={() => navigation.navigate("Home")}
             icon="icon-grid"
             size={24}
             color="#212121"

@@ -16,18 +16,6 @@ import { BtnTabBottom } from "../../components/BtnTabBottom";
 const MainTab = createBottomTabNavigator();
 
 export const HomeScreen = ({ navigation }) => {
-  const LogOutBtn = () => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={() => Alert.alert("This is a logout!")}
-        style={{ marginRight: 10 }}
-      >
-        <Icon name="icon-log-out" size={20} color={"#BDBDBD"} />
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <MainTab.Navigator
       screenOptions={{
@@ -40,7 +28,6 @@ export const HomeScreen = ({ navigation }) => {
         component={PostsScreen}
         options={{
           headerShown: false,
-          headerRight: (props) => <LogOutBtn />,
           tabBarItemStyle: { height: 0 },
           headerTitleStyle: styles.titleHeader,
 

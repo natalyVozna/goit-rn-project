@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LogOutBtn } from "../../components/LogoutBtn";
 import { CommentsScreen } from "../NestedScreens/CommentsScreen";
 import { DefaultScreenPosts } from "../NestedScreens/DefaultScreenPosts";
 import { MapScreen } from "../NestedScreens/MapScreen";
@@ -9,7 +10,10 @@ export const PostsScreen = () => {
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
-        options={{ title: "Публикации" }}
+        options={{
+          title: "Публикации",
+          headerRight: (props) => <LogOutBtn />,
+        }}
         name="DefaultScreen"
         component={DefaultScreenPosts}
       />

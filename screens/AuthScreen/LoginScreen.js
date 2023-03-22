@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -14,6 +15,7 @@ import {
 import { AvatarBox } from "../../components/AvatarBox";
 import { TextInputCustom } from "../../components/TextInputCustom";
 import ImageBg from "../../assets/img/photo-bg.jpg";
+import { loginUser } from "../../redux/auth/authOperations";
 
 const initialState = {
   email: "",
@@ -26,6 +28,8 @@ export const LoginScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get("window").width - 16 * 2;
@@ -36,16 +40,22 @@ export const LoginScreen = ({ navigation }) => {
     return () => subscription?.remove();
   }, []);
 
-  const keyboardHide = () => {
+  const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
+    dispatch(loginUser(state));
 
     setState(initialState);
   };
 
+  const keybordHide = () => {
+    Keyboard.dismiss();
+    setIsShowKeyboard(false);
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={keybordHide}>
       {/* <View style={styles.container} onLayout={onLayoutRootView}> */}
       <View style={styles.container}>
         <ImageBackground source={ImageBg} style={styles.image}>
@@ -83,7 +93,7 @@ export const LoginScreen = ({ navigation }) => {
                     <TouchableOpacity
                       activeOpacity={0.7}
                       style={styles.btn}
-                      onPress={keyboardHide}
+                      onPress={handleSubmit}
                     >
                       <Text style={styles.btnText}>Войти</Text>
                     </TouchableOpacity>

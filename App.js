@@ -1,28 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { View } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import AppLoading from "expo-app-loading";
+
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { Main } from "./components/Main";
+
 import RobotoRegular from "./assets/fonts/Roboto-Regular.ttf";
 import RobotoMedium from "./assets/fonts/Roboto-Medium.ttf";
 import RobotoBold from "./assets/fonts/Roboto-Bold.ttf";
 import Nucleo from "./assets/icommon/Nucleo.ttf";
-
-import { NavigationContainer } from "@react-navigation/native";
-import { useRoute } from "./router";
-
-import { createIconSet } from "@expo/vector-icons";
-export const Icon = createIconSet(glyphMap, "Nucleo", "nucleo.ttf");
-
 import glyphMap from "./assets/icommon/unicodesMap.json";
+import { createIconSet } from "@expo/vector-icons";
+
+export const Icon = createIconSet(glyphMap, "Nucleo", "nucleo.ttf");
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [isReady, setIsReady] = useState(false);
-  // const routing = useRoute(null);
-  const routing = useRoute({});
-
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": RobotoRegular,
     "Roboto-Medium": RobotoMedium,
@@ -42,7 +38,9 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <NavigationContainer>{routing}</NavigationContainer>
+      <Provider store={store}>
+        <Main />
+      </Provider>
     </View>
   );
 }

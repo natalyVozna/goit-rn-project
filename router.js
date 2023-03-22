@@ -8,6 +8,7 @@ import { HomeScreen } from "./screens/MainScreen/HomeScreen";
 import { ProfileScreen } from "./screens/MainScreen/ProfileScreen";
 
 const AuthStack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
 export const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -28,22 +29,22 @@ export const useRoute = (isAuth) => {
   }
 
   return (
-    <AuthStack.Navigator>
-      <AuthStack.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         options={{ headerShown: false }}
         name="Home"
         component={HomeScreen}
       />
-      <AuthStack.Screen
+      <Stack.Screen
         options={{ title: "Создать публикацию" }}
         name="CreatePosts"
         component={CreatePostsScreen}
       />
-      <AuthStack.Screen
+      <Stack.Screen
         options={{ headerShown: false }}
         name="Profile"
         component={ProfileScreen}
       />
-    </AuthStack.Navigator>
+    </Stack.Navigator>
   );
 };

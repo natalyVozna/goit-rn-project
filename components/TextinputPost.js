@@ -21,6 +21,7 @@ export const TextInputPost = ({
 }) => {
   const [paddingLeftInput, setPaddingLeftInput] = useState(0);
   // const [backgroundColorInput, setBackgroundColorInput] = useState("#F6F6F6");
+  // const [borderColorInput, setBorderColorInput] = useState("#F6F6F6");
   const inputRef = useRef();
 
   useEffect(() => {
@@ -29,21 +30,21 @@ export const TextInputPost = ({
     }
   }, [type]);
 
-  // const customOnFocus = () => {
-  //   setBorderColorInput("#FF6C00");
-  //   setBackgroundColorInput("#ffffff");
-  //   if (onFocus) {
-  //     onFocus();
-  //   }
-  // };
+  const customOnFocus = () => {
+    // setBorderColorInput("#FF6C00");
+    // setBackgroundColorInput("#ffffff");
+    if (onFocus) {
+      onFocus();
+    }
+  };
 
-  // const customOnBlur = () => {
-  //   setBorderColorInput("#E8E8E8");
-  //   setBackgroundColorInput("#F6F6F6");
-  //   if (onBlur) {
-  //     onBlur();
-  //   }
-  // };
+  const customOnBlur = () => {
+    // setBorderColorInput("#E8E8E8");
+    // setBackgroundColorInput("#F6F6F6");
+    if (onBlur) {
+      onBlur();
+    }
+  };
 
   return (
     <View style={{ position: "relative" }}>
@@ -67,6 +68,8 @@ export const TextInputPost = ({
         placeholderTextColor={"#BDBDBD"}
         value={value}
         onChangeText={handleChangeText}
+        onFocus={customOnFocus}
+        onBlur={customOnBlur}
         {...props}
       />
     </View>
